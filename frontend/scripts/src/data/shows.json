@@ -1,0 +1,351 @@
+{
+  "shows": [
+    {
+      "date": "1965-11-01",
+      "venue": "v",
+      "location": "S",
+      "identifier": "gd1965-11-01.sbd.bershaw.5417.sbeok.shnf",
+      "title": "Grateful Dead Live at various on 1965-11-01",
+      "year": 1965
+    },
+    {
+      "date": "1965-11-03",
+      "venue": "G",
+      "location": "S",
+      "identifier": "gd65-11-03.sbd.vernon.9044.sbeok.shnf",
+      "title": "Grateful Dead Live at Golden State Studios on 1965-11-03",
+      "year": 1965
+    },
+    {
+      "date": "1966-01-01",
+      "venue": "V",
+      "location": "?",
+      "identifier": "gd66-01-xx.sbd.hanno-uli.18846.sbeok.shnf",
+      "title": "Grateful Dead Live at Viola Lee Blues Reahearsals on 1966-01-01",
+      "year": 1966
+    },
+    {
+      "date": "1966-01-08",
+      "venue": "F",
+      "location": "S",
+      "identifier": "gd1966-01-08.sbd.bershaw.5410.shnf",
+      "title": "Grateful Dead Live at Fillmore Auditorium on 1966-01-08",
+      "year": 1966
+    },
+    {
+      "date": "1966-01-29",
+      "venue": "3",
+      "location": "S",
+      "identifier": "gd1966-01-29.sbd.bershaw.5411.shnf",
+      "title": "Grateful Dead Live at 363 6th Street on 1966-01-29",
+      "year": 1966
+    },
+    {
+      "date": "1966-02-05",
+      "venue": "T",
+      "location": "B",
+      "identifier": "gd1966-02-05.136661.sbd.bruno.flac16",
+      "title": "Grateful Dead Live at The Questing Beast on 1966-02-05",
+      "year": 1966
+    },
+    {
+      "date": "1966-02-12",
+      "venue": "Y",
+      "location": "C",
+      "identifier": "gd1966-02-12.sbd.bershaw.9515.shnf",
+      "title": "Grateful Dead Live at Youth Opportunities Center on 1966-02-12",
+      "year": 1966
+    },
+    {
+      "date": "1966-02-25",
+      "venue": "I",
+      "location": "L",
+      "identifier": "gd66-02-25.sbd.unknown.1593.sbefail.shnf",
+      "title": "Grateful Dead Live at Ivar Theater on 1966-02-25",
+      "year": 1966
+    },
+    {
+      "date": "1966-03-09",
+      "venue": "u",
+      "location": "u",
+      "identifier": "gd1966-03-09.136654.practise.sbd.mr.dat48k.sirmick.flac16",
+      "title": "Grateful Dead Live at unknown on 1966-03-09",
+      "year": 1966
+    },
+    {
+      "date": "1966-03-10",
+      "venue": "U",
+      "location": "L",
+      "identifier": "gd1966-03-10.136655.sbd.sirmick.flac16",
+      "title": "Grateful Dead Live at Unknown on 1966-03-10",
+      "year": 1966
+    },
+    {
+      "date": "1966-03-12",
+      "venue": "V",
+      "location": "?",
+      "identifier": "gd66-acid-test-supplement.sbd.unknown.9514.shnf",
+      "title": "Grateful Dead Live at Various on 1966-03-12",
+      "year": 1966
+    },
+    {
+      "date": "1966-03-19",
+      "venue": "C",
+      "location": "L",
+      "identifier": "gd66-03-19.sbd.scotton.81951.sbeok.flac",
+      "title": "Grateful Dead Live at Carthay Studios on 1966-03-19",
+      "year": 1966
+    },
+    {
+      "date": "1966-03-25",
+      "venue": "T",
+      "location": "L",
+      "identifier": "gd1966-03-25.139750.sbd.miller.clugston.flac1648",
+      "title": "Grateful Dead Live at Trouper's Hall on 1966-03-25",
+      "year": 1966
+    },
+    {
+      "date": "1966-05-19",
+      "venue": "A",
+      "location": "S",
+      "identifier": "gd66-05-19.sbd.sonicsolutions.82844.flac",
+      "title": "Grateful Dead Live at Avalon Ballroom on 1966-05-19",
+      "year": 1966
+    },
+    {
+      "date": "1966-06-01",
+      "venue": "U",
+      "location": "U",
+      "identifier": "gd1966-06-01.136657.sbd.sirmick.flac1648",
+      "title": "Grateful Dead Live at Unknown on 1966-06-01",
+      "year": 1966
+    },
+    {
+      "date": "1966-06-15",
+      "venue": "V",
+      "location": "V",
+      "identifier": "gd1966-xx-xx.sbd.gans.2372.shnf",
+      "title": "Grateful Dead Live at Various on 1966-06-15",
+      "year": 1966
+    },
+    {
+      "date": "1966-07-01",
+      "venue": "U",
+      "location": "S",
+      "identifier": "gd66-07-01.sbd.vernon.19924.sbeok.shnf",
+      "title": "Grateful Dead Live at Unknown (perhaps Fillmore Auditorium) on 1966-07-01",
+      "year": 1966
+    },
+    {
+      "date": "1966-07-03",
+      "venue": "F",
+      "location": "S",
+      "identifier": "gd1966-07-03.139751.sbd.miller.clugston.flac1648",
+      "title": "Grateful Dead Live at Fillmore Auditorium on 1966-07-03",
+      "year": 1966
+    },
+    {
+      "date": "1966-07-16",
+      "venue": "F",
+      "location": "S",
+      "identifier": "gd1966-07-16.sbd.serafin.4459.sbefail.shnf",
+      "title": "Grateful Dead Live at Fillmore Auditorium on 1966-07-16",
+      "year": 1966
+    },
+    {
+      "date": "1966-07-17",
+      "venue": "F",
+      "location": "S",
+      "identifier": "gd66-07-17.sbd.miller.21064.sbeok.shnf",
+      "title": "Grateful Dead Live at Fillmore Auditorium on 1966-07-17",
+      "year": 1966
+    },
+    {
+      "date": "1966-07-29",
+      "venue": "P",
+      "location": "V",
+      "identifier": "gd66-07-29.sbd.vernon.9051.sbeok.shnf",
+      "title": "Grateful Dead Live at P.N.E. Garden Auditorium on 1966-07-29",
+      "year": 1966
+    },
+    {
+      "date": "1966-07-30",
+      "venue": "P",
+      "location": "V",
+      "identifier": "gd66-07-30.sbd.vernon.9387.sbeok.shnf",
+      "title": "Grateful Dead Live at P.N.E. Garden Auditorium on 1966-07-30",
+      "year": 1966
+    },
+    {
+      "date": "1966-08-01",
+      "venue": "V",
+      "location": "?",
+      "identifier": "gd66-xx-xx.sbd.jools.19514.19529.sbeok.shnf",
+      "title": "Grateful Dead Live at Various on 1966-08-01",
+      "year": 1966
+    },
+    {
+      "date": "1966-09-16",
+      "venue": "A",
+      "location": "S",
+      "identifier": "gd1966-09-16.117435.vinyl.sbd.indidarkstar.flac24",
+      "title": "Grateful Dead Live at Avalon Ballroom on 1966-09-16",
+      "year": 1966
+    },
+    {
+      "date": "1966-10-02",
+      "venue": "S",
+      "location": "S",
+      "identifier": "gd1966-10-02.sbd.bershaw.9517.shnf",
+      "title": "Grateful Dead Live at San Francisco State University on 1966-10-02",
+      "year": 1966
+    },
+    {
+      "date": "1966-10-07",
+      "venue": "W",
+      "location": "S",
+      "identifier": "gd66-10-07.sbd.unknown.14102.sbeok.shnf",
+      "title": "Grateful Dead Live at Winterland Arena on 1966-10-07",
+      "year": 1966
+    },
+    {
+      "date": "1966-10-31",
+      "venue": "W",
+      "location": "S",
+      "identifier": "gd1966-10-31.sbd.bershaw.5416.shnf",
+      "title": "Grateful Dead Live at Winterland Arena on 1966-10-31",
+      "year": 1966
+    },
+    {
+      "date": "1966-11-01",
+      "venue": "K",
+      "location": "S",
+      "identifier": "gd1966-11-00.FM.interview.ordon.sorochty.125586.flac16",
+      "title": "Grateful Dead Live at KFRC studio on 1966-11-00",
+      "year": 1966
+    },
+    {
+      "date": "1966-11-18",
+      "venue": "F",
+      "location": "S",
+      "identifier": "gd1966-11-18.169429.sbd-partial.flegel.flac1648",
+      "title": "Grateful Dead Live at Fillmore Auditorium on 1966-11-18",
+      "year": 1966
+    },
+    {
+      "date": "1966-11-19",
+      "venue": "F",
+      "location": "S",
+      "identifier": "gd1966-11-19.sbd.seff-joshd.41-speed-fixed.75970.flacf",
+      "title": "Grateful Dead Live at Fillmore Auditorium on 1966-11-19",
+      "year": 1966
+    },
+    {
+      "date": "1966-11-29",
+      "venue": "T",
+      "location": "S",
+      "identifier": "gd66-11-29.sbd.ret.20448.sbeok.shnf",
+      "title": "Grateful Dead Live at The Matrix on 1966-11-29",
+      "year": 1966
+    },
+    {
+      "date": "1966-12-01",
+      "venue": "T",
+      "location": "S",
+      "identifier": "gd66-12-01.sbd.ladner.8575.sbeok.shnf",
+      "title": "Grateful Dead Live at The Matrix on 1966-12-01",
+      "year": 1966
+    },
+    {
+      "date": "1966-12-05",
+      "venue": "S",
+      "location": "S",
+      "identifier": "gd1966-12-05.sbd.kimbro.23064.sbeok.shnf",
+      "title": "Grateful Dead Live at Studio on 1966-12-05",
+      "year": 1966
+    },
+    {
+      "date": "1967-01-01",
+      "venue": "S",
+      "location": "U",
+      "identifier": "gd1967-xx-xx.sbd.studio.81259.flac16",
+      "title": "Grateful Dead Live at Studio Sessions for Anthem of the Sun on 1967-00-00",
+      "year": 1967
+    },
+    {
+      "date": "1967-01-14",
+      "venue": "P",
+      "location": "S",
+      "identifier": "gd67-01-14.sbd.vernon.9108.sbeok.shnf",
+      "title": "Grateful Dead Live at Polo Field, Golden Gate Park on 1967-01-14",
+      "year": 1967
+    },
+    {
+      "date": "1967-01-27",
+      "venue": "A",
+      "location": "S",
+      "identifier": "gd1967-01-27.sbd.8762.shnf",
+      "title": "Grateful Dead Live at Avalon Ballroom on 1967-01-27",
+      "year": 1967
+    },
+    {
+      "date": "1967-02-12",
+      "venue": "U",
+      "location": "S",
+      "identifier": "gd67-02-12.sbd.theotherwayne.18124.sbeok.shnf",
+      "title": "Grateful Dead Live at Unknown on 1967-02-12",
+      "year": 1967
+    },
+    {
+      "date": "1967-03-18",
+      "venue": "C",
+      "location": "S",
+      "identifier": "gd1967-03-18.156086.sbd.Flegel.flac1648",
+      "title": "Grateful Dead Live at Carousel Ballroom on 1967-03-18",
+      "year": 1967
+    },
+    {
+      "date": "1967-04-01",
+      "venue": "K",
+      "location": "S",
+      "identifier": "gd67-04-xx.prefm.vernon.9261.sbeok.shnf",
+      "title": "Grateful Dead Live at KMPX Radio Show on 1967-04-01",
+      "year": 1967
+    },
+    {
+      "date": "1967-04-08",
+      "venue": "K",
+      "location": "S",
+      "identifier": "gd67-04-08.tv.hanno.12623.sbeok.shnf",
+      "title": "Grateful Dead Live at KPIX-TV Studios on 1967-04-08",
+      "year": 1967
+    },
+    {
+      "date": "1967-05-05",
+      "venue": "F",
+      "location": "S",
+      "identifier": "gd1967-05-05.126250.sbd.wolfe-smith.flac16",
+      "title": "Grateful Dead Live at Fillmore Auditorium on 1967-05-05",
+      "year": 1967
+    },
+    {
+      "date": "1967-06-18",
+      "venue": "M",
+      "location": "M",
+      "identifier": "gd67-06-18.sbd.mandrake.19586.sbeok.shnf",
+      "title": "Grateful Dead Live at Monterey Fairgrounds on 1967-06-18",
+      "year": 1967
+    },
+    {
+      "date": "1967-07-01",
+      "venue": "7",
+      "location": "S",
+      "identifier": "gd1967-XX-XX.sbd.bershaw.5419.shnf",
+      "title": "Grateful Dead Live at 710 Haight Street House on 1967-07-01",
+      "year": 1967
+    }
+  ],
+  "lastProcessedPage": 100,
+  "lastUpdated": "2025-02-13T21:57:12.854Z",
+  "totalShows": 43
+}

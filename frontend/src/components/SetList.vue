@@ -2,8 +2,8 @@
   <div class="setlist">
     <h3>Setlist</h3>
     <div class="tracks">
-      <div 
-        v-for="(track, index) in tracks" 
+      <div
+        v-for="(track, index) in tracks"
         :key="index"
         class="track"
         :class="{ active: currentTrackIndex === index }"
@@ -19,6 +19,7 @@
 
 <script>
 export default {
+  emits: ['select-track'],
   props: {
     tracks: {
       type: Array,
@@ -71,4 +72,4 @@ export default {
   text-align: right;
   color: #666;
 }
-</style> 
+</style>

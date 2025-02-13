@@ -7,7 +7,7 @@
       controls
     ></audio>
     <div class="share-button">
-      <a 
+      <a
         v-if="archiveUrl"
         :href="archiveUrl"
         target="_blank"
@@ -21,6 +21,7 @@
 
 <script>
 export default {
+  emits: ['track-ended'],
   props: {
     currentTrack: {
       type: Object,
@@ -73,4 +74,4 @@ audio {
 .share-button a:hover {
   text-decoration: underline;
 }
-</style> 
+</style>
