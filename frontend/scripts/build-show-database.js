@@ -2,6 +2,8 @@ const fs = require('fs')
 const path = require('path')
 const fetch = require('node-fetch')
 
+const favoredTapers = ['miller']; // Add more favored tapers as needed
+
 async function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
@@ -20,6 +22,39 @@ function normalizeDate(dateStr) {
   
   const [_, year, month, day] = match
   return `19${year}-${month}-${day}`
+}
+
+function selectBestRecording(records) {
+  return records.reduce((best, current) => {
+    // Check if the current recording is better than the best one found so far
+    if (!best) return current; // If no best found yet, return current
+
+    // Criteria 1: Soundboard vs Audience
+    const isBestSoundboard = best.identifier.includes('sbd');
+    const isCurrentSoundboard = current.identifier.includes('sbd');
+    if (isCurrentSoundboard && !isBestSoundboard) return current;
+
+    // Criteria 2: Taper name preference
+    const bestTaper = best.identifier.split('.').find(part => favoredTapers.includes(part.toLowerCase()));
+    const currentTaper = current.identifier.split('.').find(part => favoredTapers.includes(part.toLowerCase()));
+    if (currentTaper && (!bestTaper || favoredTapers.indexOf(currentTaper) < favoredTapers.indexOf(bestTaper))) return current;
+
+    // Criteria 3: Number of downloads (assuming this is available in the metadata)
+    if (current.downloads > best.downloads) return current;
+
+    // Criteria 4: Number of tracks
+    if (current.tracks.length > best.tracks.length) return current;
+
+    // Criteria 5: Number of named tracks
+    const bestNamedTracks = best.tracks.filter(track => track.title).length;
+    const currentNamedTracks = current.tracks.filter(track => track.title).length;
+    if (currentNamedTracks > bestNamedTracks) return current;
+
+    // Criteria 6: Average rating (assuming this is available in the metadata)
+    if (current.rating > best.rating) return current;
+
+    return best; // Return the best found so far
+  }, null);
 }
 
 async function buildDatabase() {
@@ -91,23 +126,47 @@ async function buildDatabase() {
           return
         }
 
-        // Extract full venue name and location
-        const venue = doc.venue?.[0] || extractVenueFromTitle(doc.title) || 'Unknown Venue'
-        const location = doc.coverage?.[0] || 
-          (doc.title?.match(/,\s*([^,]+?)(?:\s+on\s+|$)/) || [])[1] || 
-          'Unknown Location'
+        // Directly extract venue and location from the metadata
+        const venue = doc.venue || 'Unknown Venue'; // Assuming 'venue' is a field in the metadata
+        const location = doc.location || 'Unknown Location'; // Assuming 'location' is a field in the metadata
 
-        // Only add if we don't have this date yet, or if this is a better quality recording
-        if (!showsByDate.has(normalizedDate) || doc.identifier.includes('sbd')) {
-          showsByDate.set(normalizedDate, {
-            date: normalizedDate,
-            venue: venue.replace(/\s+/g, ' ').trim(),
-            location: location.replace(/\s+/g, ' ').trim(),
-            identifier: doc.identifier,
-            title: doc.title || '',
-            year: doc.year || normalizedDate.split('-')[0]
-          })
-          newShowsOnThisPage++
+        // Debugging: Log extracted venue and location
+        console.log(`Extracted Venue: ${venue}, Location: ${location} for ${doc.identifier}`)
+
+        // Create a record object for easier processing
+        const record = {
+          date: normalizedDate,
+          venue: venue,
+          location: location,
+          identifier: doc.identifier,
+          title: doc.title || '',
+          year: doc.year || normalizedDate.split('-')[0],
+          downloads: doc.downloads || 0, // Assuming this field exists
+          tracks: doc.tracks || [], // Assuming this field exists
+          rating: doc.rating || 0 // Assuming this field exists
+        }
+
+        // Add the record to the showsByDate map
+        if (!showsByDate.has(normalizedDate)) {
+          showsByDate.set(normalizedDate, [record])
+        } else {
+          const existingRecords = showsByDate.get(normalizedDate)
+          if (Array.isArray(existingRecords)) {
+            existingRecords.push(record)
+          } else {
+            console.error(`Unexpected value for date ${normalizedDate}:`, existingRecords)
+            showsByDate.set(normalizedDate, [record])
+          }
+        }
+      })
+
+      // After processing all documents, select the best recording for each date
+      showsByDate.forEach((records, date) => {
+        if (Array.isArray(records) && records.length > 0) {
+          const bestRecording = selectBestRecording(records)
+          showsByDate.set(date, bestRecording)
+        } else {
+          console.error(`No valid records found for date ${date}:`, records)
         }
       })
 
