@@ -2,7 +2,12 @@
   <div class="container">
     <h1>Grateful Dead Time Machine</h1>
 
-    <DeloreanDatePicker @date-selected="handleDateSelected" />
+    <DeloreanDatePicker 
+      ref="datePicker"
+      @date-selected="handleDateSelected"
+      @destination-time="handleDestinationTime"
+      @random="handleRandom"
+    />
 
     <div v-if="isLoading" class="loading">Searching for shows...</div>
 
@@ -15,7 +20,7 @@
 
     <div v-if="currentShow" class="show-info">
       <h2>{{ formatDate(currentShow.date) }}</h2>
-      <p>{{ currentShow.venue }}, {{ currentShow.location }}</p>
+      <p>Venue: {{ currentShow.venue }}</p>
 
       <div class="audio-player">
         <audio
@@ -49,15 +54,11 @@
 
 <script>
 import DeloreanDatePicker from './components/DeloreanDatePicker.vue'
-import AudioPlayer from './components/AudioPlayer.vue'
-import SetList from './components/SetList.vue'
 import shows from './data/shows.json'
 
 export default {
   components: {
-    DeloreanDatePicker,
-    AudioPlayer,
-    SetList
+    DeloreanDatePicker
   },
   data() {
     return {
@@ -66,7 +67,7 @@ export default {
       currentTrackIndex: -1,
       error: null,
       isLoading: false,
-      showsDatabase: shows.shows
+      showsDatabase: shows
     }
   },
   computed: {
@@ -125,8 +126,12 @@ export default {
       }
     },
     handleDateSelected(dateStr) {
-      this.selectedDate = dateStr
-      this.findShow()
+      // Format the date string to ensure it's in MM/DD/YY format
+      const [month, day, year] = dateStr.split('/')
+      if (month && day && year) {
+        this.selectedDate = `${month.padStart(2, '0')}/${day.padStart(2, '0')}/${year.padStart(2, '0')}`
+        this.findShow()
+      }
     },
     async findShow() {
       this.isLoading = true
@@ -135,11 +140,16 @@ export default {
       this.currentTrackIndex = -1
 
       try {
-        const date = new Date(this.selectedDate)
-        const formattedDate = date.toISOString().split('T')[0]
+        // Parse the input date string (MM/DD/YY format)
+        const [month, day, year] = this.selectedDate.split('/')
+        
+        // Convert to YYYY-MM-DD format
+        const formattedDate = `19${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+
+        console.log('Searching for date:', formattedDate) // Debug log
 
         // Search our local database
-        const show = this.showsDatabase.find(
+        const show = this.showsDatabase.shows.find(
           (show) => show.date === formattedDate
         )
 
@@ -208,7 +218,30 @@ export default {
 
     // Add method to check if a date has a show
     hasShow(dateStr) {
-      return this.showsDatabase.some((show) => show.date === dateStr)
+      return this.showsDatabase.shows.some((show) => show.date === dateStr)
+    },
+
+    async handleDestinationTime(dateStr) {
+      if (dateStr) {
+        this.handleDateSelected(dateStr)
+      }
+    },
+
+    async handleRandom() {
+      // Get a random show from the database
+      const shows = this.showsDatabase.shows
+      const randomShow = shows[Math.floor(Math.random() * shows.length)]
+      
+      // Convert the date format from YYYY-MM-DD to MM/DD/YY
+      const [year, month, day] = randomShow.date.split('-')
+      const twoDigitYear = year.slice(2)
+      const dateStr = `${month}/${day}/${twoDigitYear}`
+      
+      // Update the date picker display
+      this.$refs.datePicker.setDate(dateStr)
+      
+      // Handle the date selection
+      this.handleDateSelected(dateStr)
     }
   }
 }

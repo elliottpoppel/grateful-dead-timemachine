@@ -48,10 +48,19 @@
     </div>
 
     <div class="buttons">
-      <button @click="emitDate" :disabled="!isValidDate">
+      <button 
+        class="destination-time" 
+        @click="emitDestinationTime"
+        :disabled="!isValidDate"
+      >
         DESTINATION TIME
       </button>
-      <button @click="randomDate">RANDOM</button>
+      <button 
+        class="random" 
+        @click="$emit('random')"
+      >
+        RANDOM
+      </button>
       <img 
         src="../assets/images/grayssportsalmanac.png" 
         alt="Gray's Sports Almanac"
@@ -63,7 +72,7 @@
 
 <script>
 export default {
-  emits: ['date-selected'],
+  emits: ['date-selected', 'destination-time', 'random'],
   data() {
     return {
       month: '',
@@ -123,11 +132,7 @@ export default {
     },
     emitDate() {
       if (!this.isValidDate) return
-      const fullYear = 1900 + parseInt(this.year)
-      const dateStr = `${fullYear}-${this.month.padStart(
-        2,
-        '0'
-      )}-${this.day.padStart(2, '0')}`
+      const dateStr = `${this.month.padStart(2, '0')}/${this.day.padStart(2, '0')}/${this.year.padStart(2, '0')}`
       this.$emit('date-selected', dateStr)
     },
     randomDate() {
@@ -141,6 +146,19 @@ export default {
       this.day = String(date.getDate()).padStart(2, '0')
       this.year = String(date.getFullYear() - 1900).padStart(2, '0')
       this.emitDate()
+    },
+    emitDestinationTime() {
+      if (this.isValidDate) {
+        const dateStr = `${this.month.padStart(2, '0')}/${this.day.padStart(2, '0')}/${this.year.padStart(2, '0')}`
+        this.$emit('destination-time', dateStr)
+      }
+    },
+    setDate(dateStr) {
+      // Expects date in MM/DD/YY format
+      const [month, day, year] = dateStr.split('/')
+      this.month = month
+      this.day = day
+      this.year = year
     }
   }
 }
