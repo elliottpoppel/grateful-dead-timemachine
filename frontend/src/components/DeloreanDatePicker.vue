@@ -173,6 +173,13 @@ export default {
   margin: 20px 0;
 }
 
+@media (max-width: 600px) {
+  .delorean-date {
+    padding: 15px;
+    margin: 10px;
+  }
+}
+
 .date-display {
   display: flex;
   justify-content: center;
