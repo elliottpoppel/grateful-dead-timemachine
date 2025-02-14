@@ -53,7 +53,7 @@
         @click="emitDestinationTime"
         :disabled="!isValidDate"
       >
-        DESTINATION TIME
+        SET DESTINATION TIME
       </button>
       <button 
         class="random" 
@@ -63,8 +63,9 @@
       </button>
       <img 
         src="../assets/images/grayssportsalmanac.png" 
-        alt="Gray's Sports Almanac"
-        class="almanac-icon"
+        class="almanac-icon" 
+        @click="$emit('show-list')"
+        alt="Show List"
       />
     </div>
   </div>
@@ -72,7 +73,7 @@
 
 <script>
 export default {
-  emits: ['date-selected', 'destination-time', 'random'],
+  emits: ['date-selected', 'destination-time', 'random', 'show-list'],
   data() {
     return {
       month: '',
@@ -85,21 +86,22 @@ export default {
       if (!this.month || !this.day || !this.year) return false
 
       const fullYear = 1900 + parseInt(this.year)
-      const date = new Date(
-        fullYear,
-        parseInt(this.month) - 1,
-        parseInt(this.day)
-      )
+      // Simple date validation without creating Date objects
+      const month = parseInt(this.month)
+      const day = parseInt(this.day)
+      const year = fullYear
 
-      // Check if date is valid and within Grateful Dead era
-      return (
-        date instanceof Date &&
-        !isNaN(date) &&
-        date >= new Date('1965-01-01') &&
-        date <= new Date('1995-12-31') &&
-        date.getMonth() === parseInt(this.month) - 1 &&
-        date.getDate() === parseInt(this.day)
-      )
+      // Basic range checks
+      if (month < 1 || month > 12) return false
+      if (day < 1 || day > 31) return false
+      if (year < 1965 || year > 1995) return false
+
+      // Check days in month (including leap years)
+      const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+      if (year % 4 === 0) daysInMonth[1] = 29
+      if (day > daysInMonth[month - 1]) return false
+
+      return true
     }
   },
   methods: {
@@ -136,29 +138,28 @@ export default {
       this.$emit('date-selected', dateStr)
     },
     randomDate() {
-      const start = new Date('1965-01-01')
-      const end = new Date('1995-12-31')
+      const start = new Date(Date.UTC(1965, 0, 1))
+      const end = new Date(Date.UTC(1995, 11, 31))
       const date = new Date(
         start.getTime() + Math.random() * (end.getTime() - start.getTime())
       )
 
-      this.month = String(date.getMonth() + 1).padStart(2, '0')
-      this.day = String(date.getDate()).padStart(2, '0')
-      this.year = String(date.getFullYear() - 1900).padStart(2, '0')
+      this.month = String(date.getUTCMonth() + 1).padStart(2, '0')
+      this.day = String(date.getUTCDate()).padStart(2, '0')
+      this.year = String(date.getUTCFullYear() - 1900).padStart(2, '0')
       this.emitDate()
     },
-    emitDestinationTime() {
-      if (this.isValidDate) {
-        const dateStr = `${this.month.padStart(2, '0')}/${this.day.padStart(2, '0')}/${this.year.padStart(2, '0')}`
-        this.$emit('destination-time', dateStr)
-      }
-    },
     setDate(dateStr) {
-      // Expects date in MM/DD/YY format
+      // Parse the incoming MM/DD/YY format
       const [month, day, year] = dateStr.split('/')
-      this.month = month
-      this.day = day
-      this.year = year
+      this.month = month.padStart(2, '0')
+      this.day = day.padStart(2, '0')
+      this.year = year.padStart(2, '0')
+    },
+    emitDestinationTime() {
+      if (!this.isValidDate) return
+      const dateStr = `${this.month.padStart(2, '0')}/${this.day.padStart(2, '0')}/${this.year.padStart(2, '0')}`
+      this.$emit('destination-time', dateStr)
     }
   }
 }
@@ -168,7 +169,7 @@ export default {
 .delorean-date {
   background: #414549;
   padding: 20px;
-  border-radius: 8px;
+  border-radius: 10px;
   margin: 20px 0;
 }
 
@@ -197,8 +198,8 @@ export default {
 
 .display-box {
   background: #000;
-  padding: 10px;
   border-radius: 4px;
+  padding: 8px;
   width: 80px;
   height: 60px;
   display: flex;

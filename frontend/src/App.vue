@@ -1,26 +1,45 @@
 <template>
   <div class="container">
-    <h1>Grateful Dead Time Machine</h1>
+    <div class="header">
+      <img 
+        :src="headerImage" 
+        alt="Grateful Dead Time Machine" 
+        class="header-image"
+      />
+    </div>
+
+    <ShowListModal
+      :show="showListModalVisible"
+      :shows="showsDatabase.shows"
+      @close="showListModalVisible = false"
+      @select-show="handleShowSelect"
+    />
 
     <DeloreanDatePicker 
       ref="datePicker"
       @date-selected="handleDateSelected"
       @destination-time="handleDestinationTime"
       @random="handleRandom"
+      @show-list="showListModalVisible = true"
     />
 
-    <div v-if="isLoading" class="loading">Searching for shows...</div>
+    <div v-if="isLoading" class="loading">
+      <div class="loading-spinner"></div>
+      <span>Searching for shows...</span>
+    </div>
 
     <div v-if="error" class="error">
-      {{ error }}
+      <p class="error-message">{{ error }}</p>
       <p class="error-help">
         Try another date - not every date has a recorded show available.
       </p>
     </div>
 
     <div v-if="currentShow" class="show-info">
-      <h2>{{ formatDate(currentShow.date) }}</h2>
-      <p>Venue: {{ currentShow.venue }}</p>
+      <div class="show-header">
+        <h2 class="venue">{{ currentShow.venue }}</h2>
+        <p class="date">{{ formatDateLong(currentShow.date) }}</p>
+      </div>
 
       <div class="audio-player">
         <audio
@@ -29,23 +48,20 @@
           controls
           @ended="playNextTrack"
         ></audio>
-        <div class="share-button">
-          <a :href="currentShow.archiveUrl" target="_blank"
-            >View on Archive.org</a
-          >
-        </div>
       </div>
 
       <div class="setlist">
-        <h3>Setlist</h3>
-        <div
-          v-for="(track, index) in currentShow.tracks"
-          :key="index"
-          class="track"
-          :class="{ active: currentTrackIndex === index }"
-          @click="playTrack(index)"
-        >
-          <span>{{ index + 1 }}. {{ track.title }}</span>
+        <div class="tracks">
+          <div
+            v-for="(track, index) in currentShow.tracks"
+            :key="index"
+            class="track"
+            :class="{ active: currentTrackIndex === index }"
+            @click="playTrack(index)"
+          >
+            <span class="track-number">{{ index + 1 }}.</span>
+            <span class="track-title">{{ track.title }}</span>
+          </div>
         </div>
       </div>
     </div>
@@ -54,20 +70,25 @@
 
 <script>
 import DeloreanDatePicker from './components/DeloreanDatePicker.vue'
+import ShowListModal from './components/ShowListModal.vue'
+import headerImage from './assets/images/gddelorean.png'
 import shows from './data/shows.json'
 
 export default {
   components: {
-    DeloreanDatePicker
+    DeloreanDatePicker,
+    ShowListModal
   },
   data() {
     return {
+      headerImage,
       selectedDate: '',
       currentShow: null,
       currentTrackIndex: -1,
       error: null,
       isLoading: false,
-      showsDatabase: shows
+      showsDatabase: shows,
+      showListModalVisible: false
     }
   },
   computed: {
@@ -143,10 +164,8 @@ export default {
         // Parse the input date string (MM/DD/YY format)
         const [month, day, year] = this.selectedDate.split('/')
         
-        // Convert to YYYY-MM-DD format
-        const formattedDate = `19${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
-
-        console.log('Searching for date:', formattedDate) // Debug log
+        // Convert to YYYY-MM-DD format without any Date object creation
+        const formattedDate = `19${year}-${month}-${day}`
 
         // Search our local database
         const show = this.showsDatabase.shows.find(
@@ -158,15 +177,12 @@ export default {
         }
 
         // Fetch show details from Archive.org
-        const response = await fetch(
+        const response = await this.fetchWithRetry(
           `https://archive.org/metadata/${show.identifier}`
         )
-        if (!response.ok) {
-          throw new Error('Unable to fetch show details from Archive.org')
-        }
-
+        
         const showData = await response.json()
-
+        
         // Process the tracks
         const tracks = showData.files
           .filter((f) => f.format === 'VBR MP3' || f.format === 'MP3')
@@ -186,14 +202,13 @@ export default {
         }
 
         this.currentShow = {
-          date: show.date,
-          venue: show.venue,
-          location: show.location,
+          ...show,
           tracks: tracks,
           archiveUrl: `https://archive.org/details/${show.identifier}`
         }
 
         this.currentTrackIndex = 0
+
       } catch (err) {
         console.error('Error:', err)
         this.error = err.message
@@ -214,6 +229,22 @@ export default {
 
     formatDate(dateStr) {
       return new Date(dateStr).toLocaleDateString()
+    },
+
+    formatDateLong(dateStr) {
+      const [year, month, day] = dateStr.split('-')
+      const date = new Date(Date.UTC(
+        parseInt(year),
+        parseInt(month) - 1,
+        parseInt(day)
+      ))
+      return date.toLocaleDateString('en-US', {
+        weekday: 'short',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        timeZone: 'UTC'  // Ensure we use UTC to prevent date shifting
+      })
     },
 
     // Add method to check if a date has a show
@@ -242,6 +273,19 @@ export default {
       
       // Handle the date selection
       this.handleDateSelected(dateStr)
+    },
+
+    async handleShowSelect(show) {
+      this.showListModalVisible = false
+      // Parse the YYYY-MM-DD format directly and ensure we use the exact date
+      const [year, month, day] = show.date.split('-')
+      const dateStr = `${month}/${day}/${year.slice(2)}`
+      
+      // Update the date picker display
+      this.$refs.datePicker.setDate(dateStr)
+      
+      // Handle the date selection
+      await this.handleDateSelected(dateStr)
     }
   }
 }
@@ -252,50 +296,164 @@ export default {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.header-image {
+  max-width: 50%;
+  height: auto;
+  border-radius: 8px;
 }
 
 .loading {
-  text-align: center;
-  margin: 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 2rem 0;
   color: #666;
+}
+
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .error {
-  color: #d32f2f;
-  margin: 20px 0;
-  padding: 10px;
-  border: 1px solid #ffcdd2;
-  border-radius: 4px;
-  background-color: #ffebee;
+  background-color: #fff5f5;
+  border: 1px solid #feb2b2;
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.error-message {
+  color: #c53030;
+  font-weight: 500;
+  margin: 0;
 }
 
 .error-help {
-  font-size: 0.9em;
-  margin-top: 8px;
-  color: #666;
+  color: #718096;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0;
 }
 
-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.show-info {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.show-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.show-header h2.venue {
+  color: #2c3e50;
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.show-header .date {
+  color: #64748b;
+  font-size: 1.1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+}
+
+.audio-player {
+  margin: 2rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+audio {
+  width: 100%;
+  max-width: 500px;
+}
+
+.setlist {
+  margin-top: 2rem;
+}
+
+.setlist h3 {
+  color: #2c3e50;
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.tracks {
+  max-height: 400px;
+  overflow-y: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
 }
 
 .track {
-  padding: 8px;
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
   cursor: pointer;
+  transition: background-color 0.2s;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.track:last-child {
+  border-bottom: none;
 }
 
 .track:hover {
-  background-color: #f5f5f5;
+  background-color: #f7fafc;
 }
 
 .track.active {
-  background-color: #e0e0e0;
+  background-color: #ebf8ff;
+}
+
+.track-number {
+  color: #718096;
+  font-weight: 500;
+  margin-right: 1rem;
+  min-width: 2rem;
+}
+
+.track-title {
+  color: #2d3748;
+  font-weight: 400;
 }
 
 @media (max-width: 600px) {
   .container {
-    padding: 10px;
+    padding: 1rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  .show-info {
+    padding: 1rem;
   }
 }
 </style>
