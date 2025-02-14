@@ -3,6 +3,7 @@ const path = require('path')
 const fetch = require('node-fetch')
 
 const favoredTapers = ['miller']; // Add more favored tapers as needed
+const baseDelay = 3000  // Increased base delay to 3 seconds
 
 async function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms))
@@ -86,7 +87,6 @@ async function buildDatabase() {
   let hasMore = true
   let errorCount = 0
   const MAX_ERRORS = 3
-  const baseDelay = 1000
   let currentDelay = baseDelay
 
   console.log('Starting to fetch Grateful Dead shows from Archive.org...')
@@ -94,6 +94,8 @@ async function buildDatabase() {
   while (hasMore) {
     try {
       console.log(`Fetching page ${page}...`)
+      await sleep(baseDelay)
+      
       const url = `https://archive.org/advancedsearch.php?` + new URLSearchParams({
         q: 'collection:(GratefulDead) AND mediatype:(etree)',
         fl: ['identifier', 'date', 'venue', 'coverage', 'title', 'year'].join(','),
@@ -104,6 +106,13 @@ async function buildDatabase() {
       }).toString()
 
       const response = await fetch(url)
+      
+      if (response.status === 507) {
+        console.log('Archive.org is temporarily unavailable (507). Waiting 30 seconds...')
+        await sleep(30000)  // Wait 30 seconds before retry
+        continue  // Retry the same page
+      }
+      
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
@@ -191,8 +200,10 @@ async function buildDatabase() {
       errorCount++
       
       if (errorCount >= MAX_ERRORS) {
-        console.log(`Hit maximum retry attempts. Saving progress at page ${page}...`)
-        break
+        console.log(`Hit maximum retry attempts. Waiting 2 minutes before continuing...`)
+        await sleep(120000)  // Wait 2 minutes
+        errorCount = 0  // Reset error count
+        continue  // Try again
       }
       
       currentDelay *= 2
