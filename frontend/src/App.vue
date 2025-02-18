@@ -47,6 +47,7 @@
           :src="currentTrack.url"
           controls
           @ended="playNextTrack"
+          autoplay
         ></audio>
       </div>
 
@@ -94,6 +95,12 @@ export default {
   computed: {
     currentTrack() {
       return this.currentShow?.tracks?.[this.currentTrackIndex]
+    },
+    pageTitle() {
+      if (this.currentShow && this.currentTrack) {
+        return `🎶 ${this.currentTrack.title} - ${this.currentShow.venue} on ${this.formatDateLong(this.currentShow.date)}`
+      }
+      return 'Grateful Dead Time Machine'
     }
   },
   methods: {
@@ -222,8 +229,11 @@ export default {
     },
 
     playNextTrack() {
-      if (this.currentTrackIndex < this.currentShow.tracks.length - 1) {
+      if (this.currentShow && this.currentTrackIndex < this.currentShow.tracks.length - 1) {
         this.currentTrackIndex++
+      } else if (this.currentShow && this.currentTrackIndex === this.currentShow.tracks.length - 1) {
+        // Reset to first track if we want to loop the show
+        this.currentTrackIndex = 0
       }
     },
 
@@ -286,6 +296,14 @@ export default {
       
       // Handle the date selection
       await this.handleDateSelected(dateStr)
+    }
+  },
+  watch: {
+    pageTitle: {
+      handler(newTitle) {
+        document.title = newTitle
+      },
+      immediate: true
     }
   }
 }
